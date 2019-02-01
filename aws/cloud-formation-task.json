@@ -1,0 +1,130 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "SonarQube",
+      "image": "451604641396.dkr.ecr.us-east-1.amazonaws.com/ft-test/sonarqube:6.7.1",
+      "memory": 512,
+      "portMappings": [
+        {
+          "protocol": "tcp",
+          "containerPort": 9000,
+          "hostPort": 9000
+        },
+        {
+          "protocol": "tcp",
+          "containerPort": 9092,
+          "hostPort": 9092
+        }
+      ],
+      "environment": [
+        {
+          "name": "SONARQUBE_JDBC_USERNAME",
+          "value": "sonar"
+        },
+        {
+          "name": "SONARQUBE_JDBC_PASSWORD",
+          "value": "v07IGCFCF83Z95NX"
+        },
+        {
+          "name": "SONARQUBE_JDBC_URL",
+          "value": "jdbc:postgresql://db:5432/sonarqube"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "volume-2",
+          "readOnly": false,
+          "containerPath": "/opt/sonarqube/conf"
+        },
+        {
+          "sourceVolume": "volume-3",
+          "readOnly": false,
+          "containerPath": "/opt/sonarqube/data"
+        },
+        {
+          "sourceVolume": "volume-5",
+          "readOnly": false,
+          "containerPath": "/opt/sonarqube/extensions"
+        },
+        {
+          "sourceVolume": "volume-1",
+          "readOnly": false,
+          "containerPath": "/opt/sonarqube/lib/bundled-plugins"
+        }
+      ],
+        
+      "essential": true
+    },
+    {
+      "name": "db",
+      "image": "451604641396.dkr.ecr.us-east-1.amazonaws.com/ft-test/postgres:10.1",
+      "memory": 512,
+      "environment": [
+        {
+          "name": "POSTGRES_USER",
+          "value": "sonar"
+        },
+        {
+          "name": "POSTGRES_PASSWORD",
+          "value": "v07IGCFCF83Z95NX"
+        },
+        {
+          "name": "POSTGRES_DB",
+          "value": "sonarqube"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "volume-4",
+          "readOnly": false,
+          "containerPath": "/var/lib/postgresql"
+        },
+        {
+          "sourceVolume": "volume-0",
+          "readOnly": false,
+          "containerPath": "/var/lib/postgresql/data"
+        }
+      ],
+      "essential": true
+    }
+    ],
+    "volumes": [
+    {
+      "name": "volume-0",
+      "host": {
+        "sourcePath": "postgresql_data"
+      }
+    },
+    {
+      "name": "volume-1",
+      "host": {
+        "sourcePath": "sonarqube_bundled-plugins"
+      }
+    },
+    {
+      "name": "volume-2",
+      "host": {
+        "sourcePath": "sonarqube_conf"
+      }
+    },
+    {
+      "name": "volume-3",
+      "host": {
+        "sourcePath": "sonarqube_data"
+      }
+    },
+    {
+      "name": "volume-4",
+      "host": {
+        "sourcePath": "sonarqube_db"
+      }
+    },
+    {
+      "name": "volume-5",
+      "host": {
+        "sourcePath": "sonarqube_extensions"
+      }
+    }
+  ],
+  "family": "sleep360"
+}
